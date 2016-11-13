@@ -4,7 +4,8 @@
             var API_KEY="f52fd5ba-04fa-4292-9818-3134d6148f35";
          
             var sumId;
-
+            var objects=[];
+            var nameArray=[];
      
 
 
@@ -19,8 +20,11 @@
                         success: function (SUMMONERS) {
 
                               sumId=SUMMONERS[SUMMONER_NAME].id;
-                              console.log(sumId);
+                              console.log(SUMMONERS);
                               getStats(sumId);
+                              getGames(sumId);
+                              
+                              objects.push(SUMMONERS);
 
 
                         }
@@ -40,19 +44,22 @@
                         },
 
                         success: function(stats){
+                        	objects.push(stats);
                               console.log(stats);
                               var length=stats.champions.length;
+                              
                               for (var i =0;i<length; i++){
                                     getStaticData(stats.champions[i].id);
 
                               }
+                              writeTable(length,stats);
                         }
             });
       }
       
 
             var gameID;
-      var getGames=function(){
+      var getGames=function(summonerId){
             $.ajax({
                   url: 'https://na.api.pvp.net/api/lol/na/v1.3/game/by-summoner/'+summonerId+'/recent?api_key='+API_KEY,
                   type: 'GET',
@@ -62,15 +69,17 @@
                   },
 
                   success: function(game){
+                  	objects.push(game);
                         console.log(game);
-                        console.log(game.games[0].gameId);
+                        var gameID=game.games[0].gameId;
                         var champid=[];
                         for (var i=0; i<10; i++){
-                              champid[i]=json.games[i].championId;
+                              champid[i]=game.games[i].championId;
                         }
+                        getMatch(gameID);
                   }
             });
-            console.log(champid[1]);
+           
       }
                         
 
@@ -84,17 +93,18 @@
                   },
 
                   success: function(champ){
-                        console.log(champ);
-                        console.log(champ.name);
-                        $('#champions').append(champ.name).append("<br/>");
-                        gameID=champ.games[0].gameId;
+                  	
+                  	
+                  		nameArray.push(champ.name);
+
+                       
                   }
             });
       }
 
                   
                               
-      var getMatch=function(){
+      var getMatch=function(gameID){
             $.ajax({
                   url: 'https://na.api.pvp.net/api/lol/na/v2.2/match/'+gameID+'?api_key='+API_KEY,
                   type: 'GET',
@@ -104,10 +114,36 @@
                   },
 
                   success: function(match){
+                  	objects.push(match);
                         console.log(match);
+                        console.log(objects[1]);
+                        console.log(objects);
                   }
             });
       }
+
+
+
+      //helper functions
+
+      function writeTable(length, stats) {
+    var table = $('#champBody');
+console.log(nameArray);
+    for (var i = 0; i <length; i++) {
+
+        	table.append('<tr>');
+	       table.append('<td>' + nameArray[i]+ '</td>')
+	       		.append('<td>' + stats.champions[i].stats.maxChampionsKilled + '</td>')
+	        	.append('<td>' + stats.champions[i].stats.maxNumDeaths + '</td>')
+	        	.append('<td>' + stats.champions[i].stats.totalDoubleKills + '</td>')
+	        	.append('<td>' + stats.champions[i].stats.totalGoldEarned + '</td>')
+	        	.append('<td>' + stats.champions[i].stats.totalMinionKills + '</td>')
+	        	.append('<td>' + stats.champions[i].stats.totalTurretsKilled + '</td></tr>');
+	        	
+        
+     
+    }
+}
       
 
 //begin dom manip
@@ -117,9 +153,10 @@ $("#summoner_click").submit(function(event){
       var SumName=$(".form-control").val();
       console.log(SumName);
       getSumName(SumName);
+
 });
 
-      
+
  
 
 
