@@ -132,13 +132,7 @@ console.log(nameArray);
     for (var i = 0; i <length; i++) {
 
         	table.append('<tr>');
-	       table.append('<td>' + nameArray[i]+ '</td>')
-	       		.append('<td>' + stats.champions[i].stats.maxChampionsKilled + '</td>')
-	        	.append('<td>' + stats.champions[i].stats.maxNumDeaths + '</td>')
-	        	.append('<td>' + stats.champions[i].stats.totalDoubleKills + '</td>')
-	        	.append('<td>' + stats.champions[i].stats.totalGoldEarned + '</td>')
-	        	.append('<td>' + stats.champions[i].stats.totalMinionKills + '</td>')
-	        	.append('<td>' + stats.champions[i].stats.totalTurretsKilled + '</td></tr>');
+	       table.append('<td>' + nameArray[i]+ '</td><td>' + stats.champions[i].stats.maxChampionsKilled + '</td><td>' + stats.champions[i].stats.maxNumDeaths + '</td>	<td>' + stats.champions[i].stats.totalDoubleKills + '</td>     	<td>' + stats.champions[i].stats.totalGoldEarned + '</td><td>' + stats.champions[i].stats.totalMinionKills + '</td><td>' + stats.champions[i].stats.totalTurretsKilled + '</td></tr>');
 	        	
         
      
